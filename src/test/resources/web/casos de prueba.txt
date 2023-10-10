@@ -1,0 +1,158 @@
+
+    CONSIGNAS:
+    Escribir 2 o 3 casos de cada sección (mínimo 3 secciones).
+    Crear el .feature con los casos en Gherkin en el proyecto de automation, debería haber un feature por sección.
+    Implementar la prueba automatizada de los escenarios.
+
+    Para la entrega:
+    Entregar un link al repositorio con la solución implementada. Ese repositorio debe ser publico para que pueda acceder el revisor.
+
+    -----------------
+
+    SECCIONES:
+@HomePage LISTO
+HomePage.feature
+
+      @HomePage #Test Case 3
+      Scenario: Verify adding a book to the Basket
+        Given the client enters the home page
+        When  the client clicks on "Shop Menu" button
+        And   the client clicks on Home button
+        And   the client clicks on one of the 3 arrivals picture
+        Then  the client is taken to a screen where they can add the book to their basket
+
+      @HomePage #Test Case 4
+      Scenario: Verify description of a selected book
+        Given the client enters the home page
+        When  the client clicks on "Shop Menu" button
+        And   the client clicks on Home button
+        And   the client clicks on one of the 3 arrivals pictures
+        And   the client clicks on Description tab
+        Then  the client should see the description of the selected book
+
+      @HomePage  #Test Case 5
+      Scenario: Verify reviews of a selected book
+        Given the client enters the home page
+        When  the client clicks on "Shop Menu" button
+        And   the client clicks on Home button
+        And   the client clicks on one of the 3 arrivals pictures
+        And   the client clicks on reviews tab
+        Then  the client should see the reviews of the selected book
+
+
+@MyAccount-LogIn ANGELES
+Login.feature
+    @SuccesfulLogIn @TestCase1
+      Scenario: Succesful LogIn
+        Given the client enters the MyAccount page
+        When  the client enters user: "sgroangie13@gmail.com" and password "asdasd4322321fds" on the logIn section
+        Then access the MyAccountPage-Dashboard after clicking the button:"LOGIN"
+
+      @FailedLogIn  @TestCase2-5
+      Scenario Outline: Failed LogIn by <motive>
+        Given the client enters the MyAccount page
+        When  the client enters <user> and <password> on the logIn section
+        Then a <warning> is shown
+
+        @InvalidInput
+        Examples:
+          | motive           | user                  | password         | warning                                                                                                                          |
+          | Invalid password | sgroangie13@gmail.com | asdasds          | Error: The password you entered for the username sgroangie13@gmail.com is incorrect. Lost your password?                         |
+          | Invalid user     | ajshdakj              | asdasd4322321fds | Error: The username ajshdakj is not registered on this site. If you are unsure of your username, try your email address instead. |
+
+        @MissingInput
+        Examples:
+          | motive                    | user                  | password         | warning                      |
+          | Missing user              |                       | asdasd4322321fds | Error: Username is required. |
+          | Missing password          | sgroangie13@gmail.com |                  | Error: Password is required. |
+          | Missing user and password |                       |                  | Error: Username is required. |
+
+
+
+@MyAccount-Registration
+Registration.feature
+
+  @SuccessfulRegistration
+  Scenario: Successful registration
+    Given the client enters the MyAccount page
+    When  the client enters email: "sgroangie@gmail.com" and password "CactusAA123" on the 'Register' section
+    Then access the MyAccountPage after clicking the button:"REGISTER"
+
+  @FailedRegistration
+  Scenario Outline: Failed registration by <motive>
+    Given the client enters the MyAccount page
+    When  the client enters <email> and <password> on the 'Register' section
+    Then a <warning> is shown
+
+    @InvalidInput
+    Examples:
+      | motive        | email              | password         | warning                                                                             |
+      | Invalid email | sgroangiegmail.com | asdasd4322321fds | Please include an '@' in the email address. 'sgroangiegmail.com' is missing an '@'. |
+
+    @MissingInput
+    Examples:
+      | motive                     | email              | password         | warning                               |
+      | Missing email              |                    | asdasd4322321fds | Please provide a valid email address. |
+      | Missing password           | sgroangiegmail.com |                  | Please enter an account password.     |
+      | Missing email and password |                    |                  | Please provide a valid email address. |
+
+
+@ShopPage
+ShopPage.feature
+       @ShopPage #Test Case 1
+       Scenario: Filter By Price Functionality
+         Given the client enters the Shop Page
+         When the client clicks "Shop Menu" button
+         And the client adjusts the filter to "Price between 150 to 450"
+         And the client clicks the "Filter Now" button
+         Then the client should see books only between 150 to 450 rps price
+
+       @ShopPage #Test Case 2
+       Scenario: Product Categories Functionality
+         Given the client enters the Shop Page
+         When the client clicks "Shop Menu" button
+         And the client clicks any link available under the "Product Categories"
+         Then the client should only see that particular product they clicked on
+
+       @ShopPage #Test Case 3-7
+       Scenario Outline: Default Sorting <functionality>
+         Given the client enters the Shop Page
+         When the client clicks "Shop Menu" button
+         And the client clicks on the <sortingOption> item in "Default sorting" dropdown
+         Then the client can view the popular products only
+         @SortingFunctionality
+         Examples:
+           | functionality | sortingOption            |
+           | popularity    | Sort by Popularity       |
+           | average       | Sort by Average ratings  |
+           | newness       | Sort by Newness ratings  |
+           | low to high   | Sort by Low to High Item |
+           | high to low   | Sort by High to Low Item |
+
+
+@MyAccount
+MyAccount.feature
+
+    @AddressesScenario @TestCase6
+      Scenario Outline: Edit previously used addresses
+        Given the client logs in succesfully
+        When the client clicks button: 'Addresses'
+        And the client clicks button: 'Edit' on <section>
+        Then the client should be able to succesfully edit <section> data
+        Examples:
+          | section          |  |
+          | Billing address  |  |
+          | Shipping address |  |
+
+      @AccountDetails @TestCase7
+      Scenario: View account details and change password
+        Given the client logs in succesfully
+        When the client clicks button: 'Account Details'
+        Then the client can view their account's details and they can change their password
+
+      @LogOut  @TestCase8
+      Scenario: Successful LogOut
+        Given the client logs in succesfully
+        When the client clicks button: 'Account Details'
+        Then the client should be re-directed to the LogIn/Register page
+
